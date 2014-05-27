@@ -7,15 +7,19 @@ END sblock_tb;
  
 ARCHITECTURE behavior OF sblock_tb IS 
 	-- Component Declaration for the Unit Under Test (UUT)
-	COMPONENT sblock
-		port (
-			SET: in STD_LOGIC;
-			CLK: in STD_LOGIC;
-			INDEX: in STD_LOGIC_VECTOR (7 downto 0);
-			INVALUE: in STD_LOGIC_VECTOR (7 downto 0);
-			OUTVALUE: out STD_LOGIC_VECTOR (7 downto 0)
+	component memory
+		generic (
+			width: integer := 8;	-- ilosc bitow adresów
+			size: integer := 256	-- rozmiar pamieci w bajtach
 		);
-	END COMPONENT;
+		port (
+			SET: in STD_LOGIC;												-- tryb pracy
+			CLK: in STD_LOGIC;												-- zegar
+			INDEX: in STD_LOGIC_VECTOR ((width - 1) downto 0);		-- indeks elementu tablicy
+			INVALUE: in STD_LOGIC_VECTOR ((width - 1) downto 0);	-- wartoœæ wejœciowa
+			OUTVALUE: out STD_LOGIC_VECTOR ((width - 1) downto 0)	-- wartoœæ wyjœciowa
+		);
+	end component;
     
 	--Inputs
 	signal SET : std_logic := '0';
@@ -31,7 +35,7 @@ ARCHITECTURE behavior OF sblock_tb IS
 	constant CLK_period : time := 10 ns;
 BEGIN
 	-- Instantiate the Unit Under Test (UUT)
-	uut: sblock PORT MAP (
+	uut: memory PORT MAP (
 		SET => SET,
 		CLK => CLK,
 		RST => RST,

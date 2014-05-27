@@ -18,9 +18,10 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.STD_LOGIC_ARITH.ALL;
 
-entity sblock is
+entity memory is
 	generic (
-		width: integer := 8	-- ilosc bitow adresów
+		width: integer := 8;	-- ilosc bitow adresów
+		size: integer := 256	-- rozmiar pamieci w bajtach
 	);
 	port (
 		SET: in STD_LOGIC;												-- tryb pracy
@@ -29,15 +30,15 @@ entity sblock is
 		INVALUE: in STD_LOGIC_VECTOR ((width - 1) downto 0);	-- wartoœæ wejœciowa
 		OUTVALUE: out STD_LOGIC_VECTOR ((width - 1) downto 0)	-- wartoœæ wyjœciowa
 	);
-end sblock;
+end memory;
 
-architecture Behavioral of sblock is
-	type rc4_state_array is array (0 to 255) of std_logic_vector((width - 1) downto 0);
+architecture Behavioral of memory is
+	type rc4_state_array is array (0 to (size - 1)) of std_logic_vector((width - 1) downto 0);
 	
 	shared variable state_array : rc4_state_array := (others => (others => '0'));
 begin
 	process (clk, index)
-		variable arrindex : integer range 0 to 255 := 0;
+		variable arrindex : integer range 0 to (size - 1) := 0;
 	begin
 		if rising_edge(clk) then
 			arrindex := conv_integer(unsigned(index));	-- odczytaj numer ¿¹danej komórki pamiêci

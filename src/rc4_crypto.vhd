@@ -4,21 +4,22 @@ use ieee.std_logic_arith.ALL;
 
 entity rc4_crypto is
 	generic (
-		width : integer := 8
+		width: integer := 8
 	);
 	port (
-		input : in std_logic_vector((width - 1) downto 0);
-		go	: in std_logic;
-		clk : in std_logic;
-		output : out std_logic_vector((width - 1) downto 0);
-		rdy : out std_logic
+		input: in std_logic_vector((width - 1) downto 0);
+		go: in std_logic;
+		clk: in std_logic;
+		output: out std_logic_vector((width - 1) downto 0);
+		rdy: out std_logic
 	);
 end rc4_crypto;
 
 architecture Behavioral of rc4_crypto is
-	component sblock
+	component memory
 		generic (
-			width: integer := 8	-- ilosc bitow adresów
+			width: integer := 8;	-- ilosc bitow adresów
+			size: integer := 256	-- rozmiar pamieci w bajtach
 		);
 		port (
 			SET: in STD_LOGIC;												-- tryb pracy
@@ -34,6 +35,8 @@ architecture Behavioral of rc4_crypto is
 	signal block_inval : std_logic_vector((width - 1) downto 0);
 	signal block_outval : std_logic_vector((width - 1) downto 0);
 	
+	constant PERM_SIZE : integer := 256; 
+	
 	type rc4_crypto_state is (
 			WHILE_0_TEST, WHILE_GO_TEST, WHILE_GO_RET,
 			MAIN_BODY, MAIN_BODY_SET_J, MAIN_BODY_SWAP_SI, MAIN_BODY_SWAP_SJ,
@@ -41,13 +44,13 @@ architecture Behavioral of rc4_crypto is
 			WHILE_0_RET
 		);
 	subtype rc4int is integer range 0 to 255;
-	type rc4_array is array (0 to 255) of rc4int;
-	
+	type rc4_array is array (0 to (PERM_SIZE - 1)) of rc4int;
+		
 	shared variable cstate : rc4_crypto_state := WHILE_0_TEST;
 	shared variable i, j, tmp, si, sj, sm : rc4int := 0;
 begin
-	sblk : sblock
-		generic map(width => width)
+	perm : memory
+		generic map(width => width, size => PERM_SIZE)
 		port map(block_set, clk, block_index, block_inval, block_outval);
 
 	process (clk)

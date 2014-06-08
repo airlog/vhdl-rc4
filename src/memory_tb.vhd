@@ -2,10 +2,10 @@ LIBRARY ieee;
 USE ieee.std_logic_1164.ALL;
 USE ieee.std_logic_arith.ALL;
 
-ENTITY sblock_tb IS
-END sblock_tb;
+ENTITY memory_tb IS
+END memory_tb;
  
-ARCHITECTURE behavior OF sblock_tb IS 
+ARCHITECTURE behavior OF memory_tb IS 
 	-- Component Declaration for the Unit Under Test (UUT)
 	component memory
 		generic (

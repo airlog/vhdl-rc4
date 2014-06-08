@@ -1,3 +1,15 @@
+--
+--	rc4_crypto
+--		urz¹dzenie szyfruj¹co/deszyfruj¹ce strumieñ bajtów przy pomocy RC4
+--	
+--	Urz¹dzenie nie posiada swojej pamiêci na aktualny stan permutacji RC4, posiada natomiast
+--	zestaw wejœæ i wyjœæ umo¿liwiaj¹cych kontakt z zewnêtrzn¹ pamiêci¹.
+--
+--	Urz¹dzenie rozpoczyna dzia³anie wtedy i tylko wtedy gdy wartoœæ sygna³u go = 1. Powoduje to zaszyfrowanie
+--	dok³adnie jednego bajtu z wejœcia. Bajt na wejœciu powinien byæ trzymany tak d³ugo a¿ sygna³ rdy = 1. Oznacza
+--	to, ¿e bajt na wyjœciu jest poprawnie zaszyfrowany/odszyfrowany.
+--
+
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use ieee.std_logic_arith.ALL;
